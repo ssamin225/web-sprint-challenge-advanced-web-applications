@@ -37,7 +37,7 @@ test('renders headline, author from the article when passed in through props', (
     const author = screen.getByTestId('author');
 
     expect(headline).toHaveTextContent(/less than half/i);
-    expect(author).toHaveTextContent(/tom mason/i);
+    expect(author).toHaveTextContent(/susan snyder/i);
 });
 
 test('renders "Associated Press" when no author is given', ()=> {
