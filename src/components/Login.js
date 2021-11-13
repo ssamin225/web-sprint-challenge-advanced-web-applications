@@ -1,12 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+import { API_URL_Base } from '../constants';
+
+const initialLoginValues = {
+    username:"",
+    password:""
+}
 
 const Login = () => {
+    const [formError, setFormError] = useState("");
+    const [loginValues, setLoginValues] = useState(initialLoginValues);
+
+    const history = useHistory();
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setLoginValues({
+            ...loginValues,
+            [name]: value
+        });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios.post(`${API_URL_Base}/login`, loginValues)
+            .then(res => {
+                localStorage.setItem('token', res.data.token);
+                history.push('/view');
+            })
+            .catch(err => {
+                console.log(err.response.data);
+                setFormError('Username or password is incorrect. Please try again.');
+            })
+    }
     
     return(<ComponentContainer>
         <ModalContainer>
-            <h1>Welcome to Blogger Pro</h1>
-            <h2>Please enter your account information.</h2>
+            <form>
+                <FormGroup>
+                    <Label>Username:</Label>
+                    <Input 
+                        name="username" 
+                        id="username" 
+                        type="text"
+                        value={loginValues.username}
+                        onChange={handleChange} 
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <Label>Password:</Label>
+                    <Input 
+                        name="password" 
+                        id="password"
+                        type="text"
+                        value={loginValues.password}
+                        onChange={handleChange}
+                    />
+                </FormGroup>
+                <Button onClick={handleSubmit} id="submit">Click to Login</Button>
+            </form>
+            <p id="error">{formError}</p>
         </ModalContainer>
     </ComponentContainer>);
 }
