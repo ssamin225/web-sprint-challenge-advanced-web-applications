@@ -33,7 +33,7 @@ const Login = () => {
                 history.push('/view');
             })
             .catch(err => {
-                console.log(err.response.data);
+                console.log(err);
                 setFormError('Username or password is incorrect. Please try again.');
             })
     }
